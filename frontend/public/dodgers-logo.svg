@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Los Angeles Dodgers">
+  <circle cx="60" cy="60" r="56" fill="#005A9C"/>
+  <circle cx="60" cy="60" r="48" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+  <text x="60" y="72" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="700" fill="#FFFFFF">LA</text>
+  <path d="M20 88 Q60 102 100 88" fill="none" stroke="#EF3E42" stroke-width="4" stroke-linecap="round"/>
+</svg>
