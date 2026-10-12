@@ -1,0 +1,12 @@
+{
+  "ml_accuracy": 0.6160130718954249,
+  "weighted_baseline_accuracy": 0.5686274509803921,
+  "count_only_accuracy": 0.5522875816993464,
+  "most_common_accuracy": 0.565359477124183,
+  "most_common_pitch": "FF",
+  "beats_most_common": true,
+  "beats_count_only": true,
+  "beats_weighted_baseline": true,
+  "train_pitches": 1427,
+  "test_pitches": 612
+}

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8741
     log_level: str = "INFO"
-    cors_origins: str = "http://127.0.0.1:5174,http://localhost:5174,*"
+    cors_origins: str = "http://127.0.0.1:5174,http://localhost:5174,http://127.0.0.1:43124,http://localhost:43124,*"
 
     default_pitcher_id: int = 808967
     default_pitcher_name: str = "Yoshinobu Yamamoto"
@@ -38,8 +38,13 @@ class Settings(BaseSettings):
     statcast_base_url: str = "https://baseballsavant.mlb.com/statcast_search/csv"
     use_sample_data: bool = False
 
-    live_poll_interval_sec: float = 5.0
+    live_poll_interval_sec: float = 3.0
+    schedule_poll_interval_sec: float = 20.0
     prefer_ml_predictions: bool = True
+    auto_start_workers: bool = True
+
+    # PostgreSQL — Docker Compose default; override via DATABASE_URL
+    database_url: str = "postgresql+psycopg://pitch:pitch@127.0.0.1:5432/pitch_intel"
 
     @property
     def cors_origin_list(self) -> list[str]:

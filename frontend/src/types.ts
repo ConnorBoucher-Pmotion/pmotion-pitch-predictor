@@ -158,3 +158,112 @@ export interface LiveState {
   prediction: PredictionResult | null
   note?: string
 }
+
+export interface ScoreboardGame {
+  game_pk: number
+  game_date?: string | null
+  status: string
+  abstract_state?: string | null
+  bucket: 'Scheduled' | 'Live' | 'Final' | string
+  home_team_id?: number | null
+  away_team_id?: number | null
+  home_team_name?: string | null
+  away_team_name?: string | null
+  home_score?: number | null
+  away_score?: number | null
+  inning?: number | null
+  inning_half?: string | null
+  venue?: string | null
+  worker_active?: boolean
+  data_label?: string
+  away_probable?: string
+  home_probable?: string
+}
+
+export interface StoredPrediction {
+  id: number
+  game_pk: number
+  at_bat_index: number
+  pitch_number: number
+  pitcher_id: number
+  top1_pitch_type: string
+  top2_pitch_type?: string | null
+  probabilities: {
+    items?: PitchProbability[]
+    top_pitch?: string
+  }
+  prediction_created_at: string | null
+  actual_pitch_type: string | null
+  top1_correct: boolean | null
+  top2_correct: boolean | null
+  resolved_at: string | null
+  data_label: string
+  explanation?: string | null
+  timing_proof?: {
+    actual_was_null_at_creation: boolean
+    prediction_created_at: string | null
+    resolved_at: string | null
+    created_before_resolve: boolean
+  }
+}
+
+export interface GameDetail {
+  game: ScoreboardGame
+  live: {
+    status?: string
+    abstract_state?: string
+    home_score?: number
+    away_score?: number
+    inning?: number
+    inning_half?: string
+    balls?: number
+    strikes?: number
+    outs?: number
+    pitcher_id?: number | null
+    pitcher_name?: string | null
+    batter_id?: number | null
+    batter_name?: string | null
+    runners?: { on_1b: boolean; on_2b: boolean; on_3b: boolean }
+    current_matchup?: Record<string, unknown> | null
+    feed_pitch_count?: number
+    data_label?: string
+    error?: string
+  } | null
+  worker: Record<string, unknown>
+  open_prediction: StoredPrediction | null
+  predictions: StoredPrediction[]
+  pitches: Array<{
+    id: number
+    at_bat_index: number
+    pitch_number: number
+    pitch_type: string
+    pitch_name?: string
+    pitcher_name?: string
+    batter_name?: string
+    balls: number
+    strikes: number
+    outs: number
+    inning: number
+    inning_half?: string
+    description?: string
+  }>
+  accuracy: {
+    resolved: number
+    top1_accuracy: number | null
+    top2_accuracy: number | null
+    open_predictions?: number
+  }
+  data_label?: string
+}
+
+export interface RosterPitcher {
+  player_id: number
+  full_name: string
+  team_id: number
+  team_name: string
+  team_abbreviation?: string | null
+  position?: string | null
+  jersey_number?: string | null
+  status?: string | null
+  data_label: string
+}

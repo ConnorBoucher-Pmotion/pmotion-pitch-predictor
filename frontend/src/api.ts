@@ -1,10 +1,13 @@
 import type {
   AppConfig,
+  GameDetail,
   GameInfo,
   LiveState,
   ModelPerformance,
   PredictionResult,
   ReplayState,
+  RosterPitcher,
+  ScoreboardGame,
   SituationInput,
   Tendencies,
 } from './types'
@@ -84,4 +87,38 @@ export const api = {
       `/api/model/train${pitcherId ? `?pitcher_id=${pitcherId}` : ''}`,
       { method: 'POST' },
     ),
+
+  // Milestone 1 platform
+  scheduleToday: (day?: string) =>
+    request<{ date: string; games: ScoreboardGame[]; live_workers: string[]; data_label: string; note?: string }>(
+      `/api/schedule/today${day ? `?day=${day}` : ''}`,
+    ),
+  gameDetail: (gamePk: number) => request<GameDetail>(`/api/games/${gamePk}`),
+  trackGame: (gamePk: number) =>
+    request<{ worker: Record<string, unknown> }>(`/api/games/${gamePk}/track`, { method: 'POST' }),
+  rosterPitchers: (opts?: { team_id?: number; q?: string; sync?: boolean }) => {
+    const params = new URLSearchParams()
+    if (opts?.team_id) params.set('team_id', String(opts.team_id))
+    if (opts?.q) params.set('q', opts.q)
+    if (opts?.sync) params.set('sync', 'true')
+    const qs = params.toString()
+    return request<{ pitchers: RosterPitcher[]; count: number; data_label: string }>(
+      `/api/pitchers${qs ? `?${qs}` : ''}`,
+    )
+  },
+  accuracy: (gamePk?: number) =>
+    request<{ resolved: number; top1_accuracy: number | null; top2_accuracy: number | null }>(
+      `/api/accuracy${gamePk ? `?game_pk=${gamePk}` : ''}`,
+    ),
+  timingProof: (gamePk?: number) =>
+    request<{ count: number; all_proof_ok: boolean; items: unknown[]; rule: string }>(
+      `/api/predictions/timing-proof${gamePk ? `?game_pk=${gamePk}` : ''}`,
+    ),
+  startHistoricalDemo: (gamePk: number, stepDelaySec = 1.2) =>
+    request<Record<string, unknown>>('/api/demo/historical-live', {
+      method: 'POST',
+      body: JSON.stringify({ game_pk: gamePk, step_delay_sec: stepDelaySec }),
+    }),
+  demoStatus: () => request<Record<string, unknown>>('/api/demo/historical-live'),
+  stopDemo: () => request<Record<string, unknown>>('/api/demo/historical-live/stop', { method: 'POST' }),
 }

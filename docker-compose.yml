@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pitch
+      POSTGRES_PASSWORD: pitch
+      POSTGRES_DB: pitch_intel
+    ports:
+      - "5432:5432"
+    volumes:
+      - pitch_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pitch -d pitch_intel"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    ports:
+      - "8741:8741"
+    environment:
+      DATABASE_URL: postgresql+psycopg://pitch:pitch@db:5432/pitch_intel
+      CORS_ORIGINS: http://127.0.0.1:5174,http://localhost:5174,*
+      AUTO_START_WORKERS: "true"
+      USE_SAMPLE_DATA: "false"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pitch_pg:
